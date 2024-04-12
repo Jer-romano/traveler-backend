@@ -10,7 +10,8 @@ const AWS = require("aws-sdk");
 const vision = require('@google-cloud/vision');
 
 const { BadRequestError } = require("../expressError");
-const { ACCESS_KEY_ID, SECRET_ACCESS_KEY } = require("../secret");
+const ACCESS_KEY_ID = process.env.ACCESS_KEY_ID;
+const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY;
 const Trip = require("../models/trip");
 
 const tripNewSchema = require("../schemas/tripNew.json");
@@ -189,7 +190,7 @@ async function labelDetection(image) {
   const [result] = await client.labelDetection(image);
   const labels = result.labelAnnotations;
   console.log('Labels:');
-  labels.forEach(label => console.log(label.description));
+ // labels.forEach(label => console.log(label.description));
 
   return labels.map(label => label.description);
 }

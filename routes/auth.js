@@ -12,7 +12,8 @@ const AWS = require("aws-sdk");
 const router = new express.Router();
 
 const { createToken } = require("../helpers/tokens");
-const { ACCESS_KEY_ID, SECRET_ACCESS_KEY } = require("../secret");
+const ACCESS_KEY_ID = process.env.ACCESS_KEY_ID;
+const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY;
 const userAuthSchema = require("../schemas/userAuth.json");
 const userRegisterSchema = require("../schemas/userRegister.json");
 const { BadRequestError } = require("../expressError");
