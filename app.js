@@ -1,6 +1,6 @@
 "use strict";
 
-/** Express app for jobly. */
+/** Express app for traveler. */
 const express = require("express");
 const cors = require("cors");
 
@@ -19,6 +19,10 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("tiny"));
 app.use(authenticateJWT);
+
+app.use("/", (req, res) => {
+  res.send("Welcome to the Traveler Backend API!");
+});
 
 app.use("/auth", authRoutes);
 app.use("/users", usersRoutes);

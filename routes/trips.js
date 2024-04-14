@@ -81,7 +81,7 @@ router.get("/:id", async function (req, res, next) {
   try {
     const trip = await Trip.get(req.params.id);
 
-    console.log("Images", trip.images);
+    //console.log("Images", trip.images);
 
     return res.json({ trip });
 
@@ -94,7 +94,9 @@ router.get("/:id", async function (req, res, next) {
 /** POST /[id] { fld1, fld2, ... } => { trip }
  *
  * Add image to trip
- *
+ * Generates tags using the Google Cloud Vision API
+ * Then uploads the image to AWS S3 bucket
+ * Then saves S3 URL in the DB along with tags
  * fields can be: { file, caption, tag1, tag2, tag3}
  *
  * Returns { imageId }
