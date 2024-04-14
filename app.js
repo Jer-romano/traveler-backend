@@ -20,9 +20,12 @@ app.use(express.json());
 app.use(morgan("tiny"));
 app.use(authenticateJWT);
 
-// app.use("/", (req, res) => {
-//   res.send("Welcome to the Traveler Backend API!");
-// });
+app.use("/", (req, res, next) => {
+  if (req.originalUrl === "/") {
+    return next();
+  }
+  authenticateJWT(req, res, next);
+});
 
 app.use("/auth", authRoutes);
 app.use("/users", usersRoutes);
