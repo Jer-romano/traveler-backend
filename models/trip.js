@@ -62,7 +62,7 @@ class Trip {
                  ORDER BY id`,
                 [row.id]
             );
-            console.log('Images:', images.rows);
+            //console.log('Images:', images.rows);
             if (images.rows && images.rows.length > 0) {
               row.images = images.rows;
           } else {

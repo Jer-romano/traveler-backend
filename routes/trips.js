@@ -134,7 +134,7 @@ router.post("/:id", upload.single('file'), async function (req, res, next) {
     }
   }
   else {
-    console.log("Hit else", ldmkArray);
+    console.log("Found Landmark");
 
      tagData = {
       tag1: ldmkArray[0].description
