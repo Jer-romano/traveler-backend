@@ -116,14 +116,13 @@ router.post("/:id", upload.single('file'), async function (req, res, next) {
   if (!file.originalname || !file.buffer || !file.mimetype) {
     return res.status(400).send('Uploaded file is missing required properties.');
   }
-
   const ldmkArray = await landmarkDetection(file.buffer);
+  const tags = await labelDetection(file.buffer);
+
   let tagData;
 
   //If no landmark detected, simply generate labels for the image
   if(!ldmkArray || ldmkArray.length === 0) {
-    //console.log("File Buffer:", file.buffer);
-    const tags = await labelDetection(file.buffer);
     tagData = {
       tag1: tags[0],
       tag2: tags[1],
@@ -131,10 +130,11 @@ router.post("/:id", upload.single('file'), async function (req, res, next) {
     }
   }
   else {
-    console.log("Hit else", ldmkArray);
-
+    console.log("Found Landmark");
      tagData = {
-      tag1: ldmkArray[0].description
+      tag1: ldmkArray[0].description,
+      tag2: tags[0],
+      tag3: tags[1]
     }
   }
 
