@@ -164,7 +164,7 @@ router.post("/:id", upload.single('file'), async function (req, res, next) {
                       ...tagData
       }
       await Trip.addImage(req.params.id, imageData);
-      res.send(`File uploaded successfully. URL: ${data.Location}`);
+      return res.status(201).send(`File uploaded successfully. URL: ${data.Location}`);
     } catch (err) {
       return next(err);
     }
