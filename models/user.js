@@ -129,7 +129,7 @@ class User {
 
     for(let row of result.rows) {
       const images = await db.query(
-          `SELECT file_url AS "fileUrl", caption, tag1, tag2, tag3 
+          `SELECT file_url AS "fileUrl", caption, tag1, tag2, tag3, tag4, tag5 
            FROM images
            WHERE trip_id = $1
            ORDER BY id`,
