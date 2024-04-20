@@ -80,7 +80,7 @@ router.get("/:id", async function (req, res, next) {
   try {
     const trip = await Trip.get(req.params.id);
 
-    console.log("Images", trip.images);
+    //console.log("Images", trip.images);
 
     return res.json({ trip });
 
