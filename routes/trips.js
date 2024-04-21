@@ -195,7 +195,7 @@ async function labelDetection(image) {
   // Performs label detection on the image file
   const [result] = await client.labelDetection(image);
   const labels = result.labelAnnotations;
-  console.log('Labels:');
+  //console.log('Labels:');
  // labels.forEach(label => console.log(label.description));
 
   return labels.map(label => label.description);
@@ -207,7 +207,7 @@ async function landmarkDetection(image) {
   // Performs label detection on the image file
   const [result] = await client.landmarkDetection(image);
   const landmarks = result.landmarkAnnotations;
-  console.log('Landmarks:');
+  //console.log('Landmarks:');
   //landmarks.forEach(landmark => console.log(landmark));
 
   return landmarks;
