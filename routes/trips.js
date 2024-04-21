@@ -8,13 +8,18 @@ const multer = require("multer");
 const AWS = require("aws-sdk");
 // Imports the Google Cloud client library
 const vision = require('@google-cloud/vision');
-
 const { BadRequestError } = require("../expressError");
-const ACCESS_KEY_ID = process.env.ACCESS_KEY_ID;
-const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY;
 const Trip = require("../models/trip");
-
 const tripNewSchema = require("../schemas/tripNew.json");
+
+if(process.env.NODE_ENV === "production") {
+  const ACCESS_KEY_ID = process.env.ACCESS_KEY_ID;
+  const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY;
+}
+else {
+    const { ACCESS_KEY_ID, SECRET_ACCESS_KEY } = require("../secret");
+}
+
 
 const router = new express.Router();
 
