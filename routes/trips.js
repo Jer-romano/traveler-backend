@@ -10,7 +10,8 @@ const AWS = require("aws-sdk");
 const vision = require('@google-cloud/vision');
 
 const { BadRequestError } = require("../expressError");
-const { ACCESS_KEY_ID, SECRET_ACCESS_KEY } = require("../secret");
+const ACCESS_KEY_ID = process.env.ACCESS_KEY_ID;
+const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY;
 const Trip = require("../models/trip");
 
 const tripNewSchema = require("../schemas/tripNew.json");
@@ -80,7 +81,7 @@ router.get("/:id", async function (req, res, next) {
   try {
     const trip = await Trip.get(req.params.id);
 
-    //console.log("Images", trip.images);
+    ////console.log("Images", trip.images);
 
     return res.json({ trip });
 
@@ -93,7 +94,9 @@ router.get("/:id", async function (req, res, next) {
 /** POST /[id] { fld1, fld2, ... } => { trip }
  *
  * Add image to trip
- *
+ * Generates tags using the Google Cloud Vision API
+ * Then uploads the image to AWS S3 bucket
+ * Then saves S3 URL in the DB along with tags
  * fields can be: { file, caption, tag1, tag2, tag3}
  *
  * Returns { imageId }
@@ -126,7 +129,9 @@ router.post("/:id", upload.single('file'), async function (req, res, next) {
     tagData = {
       tag1: tags[0],
       tag2: tags[1],
-      tag3: tags[2]
+      tag3: tags[2],
+      tag4: tags[3],
+      tag5: tags[4]
     }
   }
   else {
@@ -134,7 +139,9 @@ router.post("/:id", upload.single('file'), async function (req, res, next) {
      tagData = {
       tag1: ldmkArray[0].description,
       tag2: tags[0],
-      tag3: tags[1]
+      tag3: tags[1],
+      tag4: tags[2],
+      tag5: tags[3]
     }
   }
 
@@ -161,7 +168,7 @@ router.post("/:id", upload.single('file'), async function (req, res, next) {
                       ...tagData
       }
       await Trip.addImage(req.params.id, imageData);
-      res.send(`File uploaded successfully. URL: ${data.Location}`);
+      return res.status(201).send(`File uploaded successfully. URL: ${data.Location}`);
     } catch (err) {
       return next(err);
     }
@@ -189,7 +196,7 @@ async function labelDetection(image) {
   const [result] = await client.labelDetection(image);
   const labels = result.labelAnnotations;
   console.log('Labels:');
-  labels.forEach(label => console.log(label.description));
+ // labels.forEach(label => console.log(label.description));
 
   return labels.map(label => label.description);
 }
@@ -205,69 +212,6 @@ async function landmarkDetection(image) {
 
   return landmarks;
 }
-
-
-
-// router.post("/:id", upload.array('files', 10), async function (req, res, next) {
-  
-//   const files = req.files;
-//   console.log(files);
-//   console.log(typeof files);
-//   // Check if file exists
-//   if (!files) {
-//     return res.status(400).send('No files uploaded.');
-//   }
-//   // Check if caption exists
-//   if(!files[0].caption) {
-//     return res.status(400).send('No caption for file.');
-//   }
-
-//   // Check if file has the required properties
-//   // if (!file.originalname || !file.buffer || !file.mimetype) {
-//   //   return res.status(400).send('Uploaded file is missing required properties.');
-//   // }
-
-//   const folder = "tripimages2/";
-
-//   try {
-//     const uploadedFilesPromises = req.files.map(async (i) => {
-//       const params = {
-//         Bucket: 'traveler-capstone-images',
-//         Key: Date.now().toString() + "-" + folder + i.file.originalname,
-//         Body: i.file.buffer,
-//         ContentType: i.file.mimetype
-//       };
-
-//       const data = await s3.upload(params).promise();
-//       return data.Location;
-//     });
-
-//     const uploadedFilesUrls = await Promise.all(uploadedFilesPromises);
-
-//     try {
-//         for(let j = 0; j < uploadedFilesUrls.length; j++) {
-//           let imageData = {
-//             file_url: uploadedFilesUrls[j],
-//             caption: req.files[j].caption
-//           }
-//           await Trip.addImage(req.params.id, imageData);
-//         }
-
-//     } catch(error) {
-//       console.error("Error adding file URL and caption to DB:", error);
-//       res.status(500).json({ error: 'Failed to add file URL and caption to DB' });
-
-//     }
-
-//     res.json({ fileUrls: uploadedFilesUrls });
-
-//   } catch(error) {
-//     console.error('Error uploading files to S3:', error);
-//     res.status(500).json({ error: 'Failed to upload files to S3' });
-//   }
-
-
-// });
 
 /** GET /[id]/images => {images: []}
  * 

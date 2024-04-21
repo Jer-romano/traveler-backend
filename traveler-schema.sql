@@ -19,9 +19,11 @@ CREATE TABLE images (
   file_url TEXT NOT NULL,
   trip_id INTEGER REFERENCES trips ON DELETE CASCADE,
   caption TEXT,
-  tag1 VARCHAR(25),
-  tag2 VARCHAR(25),
-  tag3 VARCHAR(25)
+  tag1 VARCHAR(100),
+  tag2 VARCHAR(100),
+  tag3 VARCHAR(100),
+  tag4 VARCHAR(100),
+  tag5 VARCHAR(100)
 );
 
 CREATE TABLE suggestions (

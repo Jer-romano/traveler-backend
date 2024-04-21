@@ -56,13 +56,13 @@ class Trip {
         for (let row of result.rows) {
             const images = await db.query(
                 `SELECT file_url AS "fileUrl",
-                 caption, tag1, tag2, tag3 
+                 caption, tag1, tag2, tag3, tag4, tag5 
                  FROM images
                  WHERE trip_id = $1
                  ORDER BY id`,
                 [row.id]
             );
-            console.log('Images:', images.rows);
+            //console.log('Images:', images.rows);
             if (images.rows && images.rows.length > 0) {
               row.images = images.rows;
           } else {
@@ -104,7 +104,9 @@ class Trip {
                   caption,
                   tag1,
                   tag2,
-                  tag3
+                  tag3,
+                  tag4,
+                  tag5
            FROM images
            WHERE trip_id = $1
            ORDER BY id`,
@@ -124,16 +126,16 @@ class Trip {
   static async addImage(tripId, image) {
     const {file_url,
            caption,
-            tag1, tag2, tag3 } = image;
+            tag1, tag2, tag3, tag4, tag5 } = image;
 
     const result = await db.query(`INSERT INTO images
                                 (file_url, trip_id, caption,
-                                 tag1, tag2, tag3)
+                                 tag1, tag2, tag3, tag4, tag5)
                                  VALUES
-                                 ($1, $2, $3, $4, $5, $6)
+                                 ($1, $2, $3, $4, $5, $6, $7, $8)
                                  RETURNING id`,
                                  [file_url, tripId, caption,
-                                  tag1, tag2, tag3]);
+                                  tag1, tag2, tag3, tag4, tag5]);
 
     const imageId = result.rows[0];
 
@@ -169,16 +171,3 @@ class Trip {
 
 
 module.exports = Trip;
-
-// `SELECT t.id,
-// t.title,
-// t.user_id AS "userId",
-// i.file_name AS "fileName",
-// i.file_path AS "filePath",
-// i.caption,
-// i.tag1,
-// i.tag2,
-// i.tag3
-// FROM trips AS "t"
-// JOIN images AS "i" ON t.id = i.trip_id
-// WHERE t.id = $1`,
