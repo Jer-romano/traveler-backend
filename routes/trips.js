@@ -12,14 +12,17 @@ const { BadRequestError } = require("../expressError");
 const Trip = require("../models/trip");
 const tripNewSchema = require("../schemas/tripNew.json");
 
+let ACCESS_KEY_ID, SECRET_ACCESS_KEY;
+
 if(process.env.NODE_ENV === "production") {
-  const ACCESS_KEY_ID = process.env.ACCESS_KEY_ID;
-  const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY;
+  ACCESS_KEY_ID = process.env.ACCESS_KEY_ID;
+  SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY;
 }
 else {
-    const { ACCESS_KEY_ID, SECRET_ACCESS_KEY } = require("../secret");
+    const secrets = require("../secret");
+    ACCESS_KEY_ID = secrets.ACCESS_KEY_ID;
+    SECRET_ACCESS_KEY = secrets.SECRET_ACCESS_KEY;
 }
-
 
 const router = new express.Router();
 
